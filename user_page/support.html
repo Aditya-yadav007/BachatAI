@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Center - We're Here to Help</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #374151;
+            background: #f9fafb;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><path d="M0,0v46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1047.76,5.4,1100.73,16.73V0Z"/></svg>') repeat-x;
+            background-size: 1000px 100px;
+            animation: wave 20s linear infinite;
+        }
+
+        @keyframes wave {
+            0% {
+                background-position-x: 0;
+            }
+
+            100% {
+                background-position-x: 1000px;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Support Options Grid */
+        .support-section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 3rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .support-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .support-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+        }
+
+        .support-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .support-icon {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .support-card:hover .support-icon {
+            background: linear-gradient(135deg, #10b981, #059669);
+            transform: scale(1.1);
+        }
+
+        .support-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .support-card p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: white;
+            padding: 4rem 0;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: #3b82f6;
+        }
+
+        .faq-question {
+            background: #f9fafb;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #1f2937;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f3f4f6;
+        }
+
+        .faq-question.active {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+            color: #6b7280;
+        }
+
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+            color: #1d4ed8;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+
+        .faq-answer.active {
+            max-height: 200px;
+        }
+
+        .faq-answer-content {
+            padding: 1.5rem;
+            color: #6b7280;
+            line-height: 1.7;
+        }
+
+        /* Contact Card */
+        .contact-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            height: fit-content;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+        }
+
+        .contact-item i {
+            color: #3b82f6;
+            font-size: 1.25rem;
+        }
+
+        .contact-item span {
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .ticket-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .ticket-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .support-card {
+                padding: 1.5rem;
+            }
+
+            .contact-card {
+                padding: 2rem;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                padding: 3rem 1rem;
+            }
+
+            .support-section,
+            .faq-section,
+            .contact-section {
+                padding: 3rem 0;
+            }
+        }
+    </style>
+</head>
+
+<body>    
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 1rem; position: relative; z-index: 2;">
+            <a href="./dashboard.html"
+                style="display: flex; align-items: center; gap: 0.5rem; color: white; text-decoration: none; font-weight: 600; transition: all 0.3s ease; padding: 0.75rem 1rem; border-radius: 0.5rem; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);"
+                id="backToDashboard"
+                onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateX(-5px)'"
+                onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(0)'"
+                onclick="handleDashboardRedirect(event)">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to Our Support</h1>
+            <p class="hero-subtitle">We're here to help you with your questions, issues, and product guidance.</p>
+        </div>
+    </section>
+
+    <!-- Support Options Section -->
+    <section class="support-section">
+        <div class="container">
+            <h2 class="section-title">How Can We Help You?</h2>
+            <div class="main-content">
+                <!-- Support Options Column -->
+                <div class="support-column">
+                    <div class="support-card" onclick="handleSupportOption('live-chat')">
+                        <div class="support-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Live Chat</h3>
+                        <p>Chat with our support team in real-time. Get immediate assistance for urgent matters.</p>
+                    </div>
+
+                    <div class="support-card" onclick="handleSupportOption('email')">
+                        <div class="support-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email Support</h3>
+                        <p>Send us a detailed message and we'll get back to you within 24 hours with a comprehensive
+                            solution.</p>
+                    </div>
+                </div>
+
+                <!-- Contact Information Column -->
+                <div class="contact-column">
+                    <div class="contact-card">
+                        <h3 class="section-title" style="margin-bottom: 2rem; font-size: 2rem;">Get in Touch</h3>
+
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>support@company.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+1 (555) 123-4567</span>
+                            </div>
+                        </div>
+
+                        <button class="ticket-btn" onclick="submitTicket()">
+                            <i class="fas fa-ticket-alt" style="margin-right: 0.5rem;"></i>
+                            Submit a Ticket
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="faq-container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do I reset my password?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            To reset your password, go to the login page and click "Forgot Password". Enter your email
+                            address and we'll send you a secure link to create a new password. The link will expire in
+                            24 hours for security reasons.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How can I update my account information?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            You can update your account information by logging into your account and navigating to the
+                            "Profile" or "Account Settings" section. From there, you can modify your personal details,
+                            contact information, and preferences.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What are your support hours?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Our support team is available Monday through Friday from 9:00 AM to 6:00 PM (EST). For
+                            urgent matters outside these hours, you can submit a ticket or use our live chat, and we'll
+                            respond as soon as possible.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do I cancel my subscription?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            To cancel your subscription, go to your account settings and select "Billing &
+                            Subscriptions". Click on "Cancel Subscription" and follow the prompts. Your access will
+                            continue until the end of your current billing period.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Is my data secure?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Yes, we take data security very seriously. We use industry-standard encryption, secure
+                            servers, and regular security audits to protect your information. We never share your
+                            personal data with third parties without your explicit consent.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // FAQ Toggle Functionality
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('.faq-icon');
+
+            // Close all other FAQs
+            document.querySelectorAll('.faq-question').forEach(q => {
+                if (q !== element) {
+                    q.classList.remove('active');
+                    q.nextElementSibling.classList.remove('active');
+                }
+            });
+
+            // Toggle current FAQ
+            element.classList.toggle('active');
+            answer.classList.toggle('active');
+        }
+
+        // Support Option Handlers
+        function handleSupportOption(option) {
+            switch (option) {
+                case 'live-chat':
+                    showMessage('Opening live chat...', 'info');
+                    // In a real app, open chat widget
+                    break;
+                case 'email':
+                    window.location.href = 'mailto:support@company.com';
+                    break;
+            }
+        }
+
+        // Redirect to Dashboard Function
+        function redirectToDashboard() {
+            window.location.href = './dashboard.html';
+        }
+
+        // Handle Dashboard Redirect with feedback
+        function handleDashboardRedirect(event) {
+            event.preventDefault();
+            showMessage('Redirecting to Dashboard...', 'info');
+            setTimeout(() => {
+                window.location.href = './dashboard.html';
+            }, 500);
+        }
+
+        // Submit Ticket Function
+        function submitTicket() {
+            showMessage('Opening ticket submission form...', 'success');
+            // In a real app, open ticket form modal or redirect
+        }
+
+        // Show Message Function
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                z-index: 1000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => messageDiv.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations for messages
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Smooth scroll for internal links
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add stagger animation to support cards
+            const cards = document.querySelectorAll('.support-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.6s ease forwards';
+            });
+        });
+
+        // Add fade in animation
+        const fadeInStyle = document.createElement('style');
+        fadeInStyle.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(fadeInStyle);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BachatAI - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --purple-color: #8b5cf6;
+            --orange-color: #f97316;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar.mobile-collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .logo i {
+            font-size: 32px;
+        }
+
+        .sidebar.collapsed .logo span {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .nav-menu {
+            padding: 24px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .sidebar.collapsed .nav-item {
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .sidebar.collapsed .nav-item span {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .nav-item:hover .nav-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-tooltip {
+            position: absolute;
+            left: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--text-primary);
+            color: var(--card-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 1001;
+        }
+
+        .nav-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-right-color: var(--text-primary);
+        }
+
+        .nav-item:hover {
+            background: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-color);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 18px;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            height: 80px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 999;
+            transition: left 0.3s ease;
+        }
+
+        .top-nav.collapsed {
+            left: 80px;
+        }
+
+        .top-nav.mobile-expanded {
+            left: 0;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-center {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 32px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .search-highlight {
+            background-color: #ffeb3b;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1003;
+            margin-top: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+        }
+
+        .search-results.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-color);
+        }
+
+        .search-result-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .search-result-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .profile-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .profile-dropdown:hover {
+            background: var(--bg-color);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--purple-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .profile-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .profile-chevron {
+            color: var(--text-secondary);
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .profile-dropdown.open .profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 1002;
+            margin-top: 8px;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-color);
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-item.logout {
+            color: var(--danger-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--danger-color);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            margin-right: 16px;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 80px;
+            padding: 32px;
+            min-height: calc(100vh - 80px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.collapsed {
+            margin-left: 80px;
+        }
+
+        .main-content.mobile-expanded {
+            margin-left: 0;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .stat-icon.blue {
+            background: var(--primary-color);
+        }
+
+        .stat-icon.green {
+            background: var(--success-color);
+        }
+
+        .stat-icon.purple {
+            background: var(--purple-color);
+        }
+
+        .stat-icon.orange {
+            background: var(--orange-color);
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 8px 0;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+
+        .stat-change.negative {
+            color: var(--danger-color);
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .export-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .export-btn:hover {
+            background: #2563eb;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: var(--bg-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .activity-container {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .activity-header {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar.collapsed {
+                width: 280px;
+            }
+
+            .top-nav {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .sidebar-toggle {
+                display: none;
+            }
+
+            .nav-center {
+                margin: 0 16px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .profile-chevron {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 20px;
+            }
+
+            .nav-center {
+                display: none;
+            }
+
+            .top-nav {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-piggy-bank"></i>
+                <span>BachatAI</span>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-item active" data-section="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+                <div class="nav-tooltip">Dashboard</div>
+            </a>
+            <a href="#" class="nav-item" data-section="users">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+                <div class="nav-tooltip">Users</div>
+            </a>
+            <a href="#" class="nav-item" data-section="transactions">
+                <i class="fas fa-credit-card"></i>
+                <span>Transactions</span>
+                <div class="nav-tooltip">Transactions</div>
+            </a>
+            <a href="#" class="nav-item" data-section="analytics">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+                <div class="nav-tooltip">Analytics</div>
+            </a>
+            <a href="#" class="nav-item" data-section="notifications">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <div class="nav-tooltip">Notifications</div>
+            </a>
+            <a href="#" class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+                <div class="nav-tooltip">Settings</div>
+            </a>
+            <a href="#" class="nav-item" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+                <div class="nav-tooltip">Logout</div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Top Navigation -->
+    <header class="top-nav" id="topNav">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="page-title">Dashboard</h1>
+        </div>
+
+        <div class="nav-center">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-bar" placeholder="Search users, transactions, analytics…">
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="profile-section">
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-avatar">A</div>
+                    <div class="profile-info">
+                        <h4>Admin</h4>
+                        <p>Administrator</p>
+                    </div>
+                    <i class="fas fa-chevron-down profile-chevron"></i>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="#" class="dropdown-item" data-action="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a class="dropdown-item logout" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-title">Total Users</div>
+                <div class="stat-value" id="totalUsers">12,847</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8.2% from last month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="stat-title">Total Revenue</div>
+                <div class="stat-value" id="totalRevenue">$2,847,392</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12.5% from last month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="stat-title">Active Sessions</div>
+                <div class="stat-value" id="activeSessions">8,429</div>
+                <div class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-2.1% from last month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-target"></i>
+                    </div>
+                </div>
+                <div class="stat-title">Savings Goal</div>
+                <div class="stat-value" id="savingsGoal">87.3%</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+5.7% from last month</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="analytics-section">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Revenue Analytics</h3>
+                    <button class="export-btn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-area" style="font-size: 48px; margin-right: 16px;"></i>
+                    Chart.js integration area - Revenue trends over time
+                </div>
+            </div>
+
+            <div class="activity-container">
+                <h3 class="activity-header">Recent Activity</h3>
+                <div id="activityList">
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--success-color);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">New user registered</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--primary-color);">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Payment received: $1,250</div>
+                            <div class="activity-time">5 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--warning-color);">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Analytics updated</div>
+                            <div class="activity-time">12 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--purple-color);">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">System notification sent</div>
+                            <div class="activity-time">18 minutes ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const topNav = document.getElementById('topNav');
+        const mainContent = document.getElementById('mainContent');
+        const mobileToggle = document.getElementById('mobileToggle');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const themeToggle = document.getElementById('themeToggle');
+        const searchBar = document.querySelector('.search-bar');
+        const navItems = document.querySelectorAll('.nav-item');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        // Search functionality variables
+        let searchTimeout;
+        let originalContent = {};
+        let searchResults = null;
+
+        // Desktop Sidebar Toggle
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            topNav.classList.toggle('collapsed');
+            mainContent.classList.toggle('collapsed');
+        });
+
+        // Mobile Sidebar Toggle
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            if (window.innerWidth <= 768) {
+                document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : 'auto';
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 &&
+                !sidebar.contains(e.target) &&
+                !mobileToggle.contains(e.target) &&
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            const icon = themeToggle.querySelector('i');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const themeIcon = themeToggle.querySelector('i');
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        // Navigation Active State
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+
+                // Add active class to clicked item
+                item.classList.add('active');
+
+                // Close mobile sidebar
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                    document.body.style.overflow = 'auto';
+                }
+
+                // Update page title
+                const section = item.getAttribute('data-section');
+                const pageTitle = document.querySelector('.page-title');
+                pageTitle.textContent = section.charAt(0).toUpperCase() + section.slice(1);
+
+                // Handle navigation to specific pages
+                if (section === 'notifications') {
+                    window.location.href = '../admin_page/notification.html';
+                }
+            });
+        });
+
+        // Create search results container
+        function createSearchResults() {
+            if (!searchResults) {
+                searchResults = document.createElement('div');
+                searchResults.className = 'search-results';
+                searchResults.id = 'searchResults';
+                document.querySelector('.search-container').appendChild(searchResults);
+            }
+            return searchResults;
+        }
+
+        // Search functionality
+        function performSearch(query) {
+            const resultsContainer = createSearchResults();
+
+            if (!query.trim()) {
+                resultsContainer.classList.remove('show');
+                clearHighlights();
+                return;
+            }
+
+            // Elements to search in
+            const searchableElements = [
+                ...document.querySelectorAll('.stat-title'),
+                ...document.querySelectorAll('.stat-value'),
+                ...document.querySelectorAll('.chart-title'),
+                ...document.querySelectorAll('.activity-text'),
+                ...document.querySelectorAll('.nav-item span'),
+                ...document.querySelectorAll('.page-title'),
+                ...document.querySelectorAll('h1, h2, h3, h4, h5, h6'),
+                ...document.querySelectorAll('p'),
+                ...document.querySelectorAll('span')
+            ];
+
+            const results = [];
+            const regex = new RegExp(query, 'gi');
+
+            searchableElements.forEach(element => {
+                const text = element.textContent || element.innerText;
+                if (text && regex.test(text)) {
+                    // Store original content if not already stored
+                    if (!originalContent[element.id || element.className]) {
+                        originalContent[element.id || element.className] = element.innerHTML;
+                    }
+
+                    // Highlight matching text
+                    const highlightedText = text.replace(regex, match =>
+                        `<span class="search-highlight">${match}</span>`
+                    );
+                    element.innerHTML = highlightedText;
+
+                    // Add to results
+                    results.push({
+                        element: element,
+                        text: text,
+                        context: getElementContext(element)
+                    });
+                }
+            });
+
+            // Display search results
+            displaySearchResults(results, query);
+        }
+
+        function getElementContext(element) {
+            const parent = element.closest('.stat-card, .activity-item, .nav-item, .chart-container');
+            if (parent) {
+                if (parent.classList.contains('stat-card')) return 'Statistics';
+                if (parent.classList.contains('activity-item')) return 'Recent Activity';
+                if (parent.classList.contains('nav-item')) return 'Navigation';
+                if (parent.classList.contains('chart-container')) return 'Analytics';
+            }
+            return 'Dashboard';
+        }
+
+        function displaySearchResults(results, query) {
+            const resultsContainer = createSearchResults();
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="search-result-item">
+                        <div class="search-result-title">No results found</div>
+                        <div class="search-result-content">No matches found for "${query}"</div>
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = results.slice(0, 5).map(result => `
+                    <div class="search-result-item" onclick="scrollToElement(this)" data-element-id="${result.element.id || result.element.className}">
+                        <div class="search-result-title">${result.context}</div>
+                        <div class="search-result-content">${result.text.substring(0, 100)}${result.text.length > 100 ? '...' : ''}</div>
+                    </div>
+                `).join('');
+            }
+
+            resultsContainer.classList.add('show');
+        }
+
+        function clearHighlights() {
+            Object.keys(originalContent).forEach(key => {
+                const elements = key.startsWith('#') ?
+                    [document.getElementById(key.substring(1))] :
+                    document.querySelectorAll('.' + key);
+
+                elements.forEach(element => {
+                    if (element && originalContent[key]) {
+                        element.innerHTML = originalContent[key];
+                    }
+                });
+            });
+            originalContent = {};
+        }
+
+        function scrollToElement(resultItem) {
+            const elementId = resultItem.getAttribute('data-element-id');
+            const element = elementId.startsWith('#') ?
+                document.getElementById(elementId.substring(1)) :
+                document.querySelector('.' + elementId);
+
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Add temporary highlight effect
+                element.style.transition = 'all 0.3s ease';
+                element.style.transform = 'scale(1.05)';
+                element.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.3)';
+
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                    element.style.boxShadow = '';
+                }, 1000);
+            }
+
+            // Hide search results
+            createSearchResults().classList.remove('show');
+            searchBar.blur();
+        }
+
+        // Search Bar Event Listeners
+        searchBar.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(e.target.value);
+            }, 300);
+        });
+
+        searchBar.addEventListener('focus', () => {
+            searchBar.parentElement.style.transform = 'scale(1.02)';
+            if (searchBar.value.trim()) {
+                createSearchResults().classList.add('show');
+            }
+        });
+
+        searchBar.addEventListener('blur', () => {
+            searchBar.parentElement.style.transform = 'scale(1)';
+            // Delay hiding results to allow clicking on them
+            setTimeout(() => {
+                createSearchResults().classList.remove('show');
+            }, 200);
+        });
+
+        // Clear search on Escape key
+        searchBar.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchBar.value = '';
+                createSearchResults().classList.remove('show');
+                clearHighlights();
+                searchBar.blur();
+            }
+        });
+
+        // Animated Counter for Statistics
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                if (element.id === 'totalRevenue') {
+                    element.textContent = '$' + Math.floor(current).toLocaleString();
+                } else if (element.id === 'savingsGoal') {
+                    element.textContent = current.toFixed(1) + '%';
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Initialize counters on page load
+        window.addEventListener('load', () => {
+            animateCounter(document.getElementById('totalUsers'), 12847);
+            animateCounter(document.getElementById('totalRevenue'), 2847392);
+            animateCounter(document.getElementById('activeSessions'), 8429);
+            animateCounter(document.getElementById('savingsGoal'), 87.3);
+        });
+
+        // Auto-refresh Recent Activity (simulated)
+        const activities = [
+            { icon: 'fas fa-user-plus', text: 'New user registered', bg: 'var(--success-color)' },
+            { icon: 'fas fa-credit-card', text: 'Payment received: $1,250', bg: 'var(--primary-color)' },
+            { icon: 'fas fa-chart-bar', text: 'Analytics updated', bg: 'var(--warning-color)' },
+            { icon: 'fas fa-bell', text: 'System notification sent', bg: 'var(--purple-color)' },
+            { icon: 'fas fa-user-edit', text: 'User profile updated', bg: 'var(--success-color)' },
+            { icon: 'fas fa-download', text: 'Report generated', bg: 'var(--primary-color)' },
+            { icon: 'fas fa-shield-alt', text: 'Security scan completed', bg: 'var(--danger-color)' },
+            { icon: 'fas fa-cog', text: 'Settings modified', bg: 'var(--secondary-color)' }
+        ];
+
+        function addNewActivity() {
+            const activityList = document.getElementById('activityList');
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.style.opacity = '0';
+            newActivity.style.transform = 'translateY(-20px)';
+
+            newActivity.innerHTML = `
+                <div class="activity-icon" style="background: ${randomActivity.bg};">
+                    <i class="${randomActivity.icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-text">${randomActivity.text}</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+            `;
+
+            // Insert at the beginning
+            activityList.insertBefore(newActivity, activityList.firstChild);
+
+            // Animate in
+            setTimeout(() => {
+                newActivity.style.transition = 'all 0.3s ease';
+                newActivity.style.opacity = '1';
+                newActivity.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Remove oldest activity if more than 6
+            const activities = activityList.querySelectorAll('.activity-item');
+            if (activities.length > 6) {
+                const lastActivity = activities[activities.length - 1];
+                lastActivity.style.transition = 'all 0.3s ease';
+                lastActivity.style.opacity = '0';
+                lastActivity.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    if (lastActivity.parentNode) {
+                        lastActivity.parentNode.removeChild(lastActivity);
+                    }
+                }, 300);
+            }
+
+            // Update timestamps
+            updateTimestamps();
+        }
+
+        function updateTimestamps() {
+            const timeElements = document.querySelectorAll('.activity-time');
+            timeElements.forEach((element, index) => {
+                if (index === 0) {
+                    element.textContent = 'Just now';
+                } else {
+                    const minutes = (index * 3) + 2;
+                    element.textContent = `${minutes} minutes ago`;
+                }
+            });
+        }
+
+        // Add new activity every 15 seconds
+        setInterval(addNewActivity, 15000);
+
+        // Profile Dropdown Toggle
+        profileDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('open');
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('open');
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        // Handle dropdown item clicks
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const action = item.getAttribute('data-action');
+
+                if (action === 'profile') {
+                    // Navigate to profile page
+                    window.location.href = '../admin_page/profile.html';
+                } else if (action === 'logout') {
+                    // Handle logout action
+                    const confirmLogout = confirm('Are you sure you want to logout?');
+
+                    if (confirmLogout) {
+                        localStorage.removeItem('loggedInUserId');
+                        // Redirect to main index page
+                        window.location.href = '../index.html';
+                    }
+
+                }
+
+                // Close dropdown after action
+                profileDropdown.classList.remove('open');
+                dropdownMenu.classList.remove('show');
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            }
+
+            // Close dropdown on resize
+            profileDropdown.classList.remove('open');
+            dropdownMenu.classList.remove('show');
+
+            // Close search results on resize
+            if (searchResults) {
+                searchResults.classList.remove('show');
+            }
+        });
+
+        // Global function for search result clicks
+        window.scrollToElement = scrollToElement;
+
+        // Export button functionality
+        document.querySelector('.export-btn').addEventListener('click', () => {
+            // Simulate export functionality
+            const btn = document.querySelector('.export-btn');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 1000);
+            }, 2000);
+        });
+        // Handle logout
+        function handleLogout() {
+            const confirmLogout = confirm('Are you sure you want to logout?');
+
+            if (confirmLogout) {
+                localStorage.removeItem('loggedInUserId');
+                // Redirect to main index page
+                window.location.href = '../index.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

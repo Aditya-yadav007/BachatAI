@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - BachatAI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="user-styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                    Notifications
+                </h1>
+            </div>
+            <div class="header-info">
+                <p class="subtitle">Stay updated with the latest announcements and information</p>
+                <div class="notification-count">
+                    <span id="activeNotificationCount">0</span> active notifications
+                    <button id="refreshBtn" class="btn btn-primary">
+                        <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Notifications Container -->
+            <section class="notifications-section" id="notificationsContainer">
+                <!-- Notifications will be populated here -->
+            </section>
+
+            <!-- Empty State -->
+            <section class="empty-state hidden" id="emptyState">
+                <div class="empty-content">
+                    <i class="fas fa-bell-slash" aria-hidden="true"></i>
+                    <h3>No Active Notifications</h3>
+                    <p>There are currently no active notifications to display.</p>
+                    <button id="checkAgainBtn" class="btn btn-primary">
+                        <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                        Check Again
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <section class="loading-state" id="loadingState">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <p>Loading notifications...</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 BachatAI. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Detail Modal -->
+    <div id="notificationModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="modalTitle">Notification Details</h2>
+                <button class="modal-close" onclick="closeNotificationModal()" aria-label="Close modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </header>
+            <div class="modal-body" id="modalBody">
+                <!-- Content populated by JavaScript -->
+            </div>
+            <footer class="modal-footer" id="modalFooter">
+                <!-- Footer content populated by JavaScript -->
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="notification-manager.js"></script>
+    <script src="user-script.js"></script>
+</body>
+</html>

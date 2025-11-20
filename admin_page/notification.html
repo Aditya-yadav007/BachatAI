@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Notification Panel - BachatAI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="notification.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    Admin Notification Panel
+                </h1>
+                <div class="header-actions">
+                    <a href="../user_page/usernotification.html" class="btn btn-secondary">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
+                        View User Page
+                    </a>
+                    <div class="stats" id="notificationStats">
+                        <span class="stat-item">
+                            <span class="stat-label">Total:</span>
+                            <span class="stat-value" id="totalCount">0</span>
+                        </span>
+                        <span class="stat-item">
+                            <span class="stat-label">Active:</span>
+                            <span class="stat-value" id="activeCount">0</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Add Notification Form -->
+            <section class="form-section">
+                <h2>
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                    Add New Notification
+                </h2>
+                
+                <form id="notificationForm" class="notification-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="notificationTitle" class="form-label">
+                                Title <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="notificationTitle" 
+                                class="form-input" 
+                                placeholder="Enter notification title"
+                                maxlength="100"
+                                required
+                            >
+                            <small class="form-help">Maximum 100 characters</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notificationStatus" class="form-label">Status</label>
+                            <select id="notificationStatus" class="form-select">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notificationMessage" class="form-label">
+                            Message <span class="required">*</span>
+                        </label>
+                        <textarea 
+                            id="notificationMessage" 
+                            class="form-textarea" 
+                            placeholder="Enter notification message"
+                            maxlength="500"
+                            rows="4"
+                            required
+                        ></textarea>
+                        <small class="form-help">Maximum 500 characters</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notificationLink" class="form-label">
+                            Link (Optional)
+                        </label>
+                        <input 
+                            type="url" 
+                            id="notificationLink" 
+                            class="form-input" 
+                            placeholder="https://example.com"
+                        >
+                        <small class="form-help">Optional clickable link for users</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancelBtn" class="btn btn-secondary" style="display: none;">
+                            Cancel
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Add Notification
+                        </button>
+                    </div>
+
+                    <!-- Error/Success Messages -->
+                    <div id="formMessages" class="form-messages"></div>
+                </form>
+            </section>
+
+            <!-- Notifications List -->
+            <section class="list-section">
+                <div class="section-header">
+                    <h2>
+                        <i class="fas fa-list" aria-hidden="true"></i>
+                        Manage Notifications
+                    </h2>
+                    <div class="section-actions">
+                        <button id="refreshBtn" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                            Refresh
+                        </button>
+                        <button id="clearAllBtn" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash" aria-hidden="true"></i>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notifications Table -->
+                <div class="table-container">
+                    <table class="notifications-table" id="notificationsTable">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Title</th>
+                                <th>Message</th>
+                                <th>Link</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="notificationsTableBody">
+                            <!-- Notifications will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <i class="fas fa-bell-slash" aria-hidden="true"></i>
+                    <h3>No Notifications</h3>
+                    <p>Create your first notification using the form above.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" role="dialog" aria-labelledby="confirmTitle" aria-hidden="true">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="confirmTitle">Confirm Action</h3>
+                <button class="modal-close" onclick="closeConfirmModal()" aria-label="Close modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </header>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure you want to perform this action?</p>
+            </div>
+            <footer class="modal-footer">
+                <button id="confirmCancel" class="btn btn-secondary" onclick="closeConfirmModal()">
+                    Cancel
+                </button>
+                <button id="confirmAction" class="btn btn-danger">
+                    Confirm
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="notification-manager.js"></script>
+    <script src="notification.js"></script>
+</body>
+</html>
