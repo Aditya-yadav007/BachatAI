@@ -239,8 +239,8 @@ const TransactionsPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-semibold text-slate-800">Transactions</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">Transactions</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Add and manage all your incomes and expenses.
         </p>
       </div>
@@ -248,7 +248,7 @@ const TransactionsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Add Transaction Form */}
         <Card className="lg:col-span-1">
-          <h3 className="text-sm font-medium text-slate-700 mb-4">
+          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-4">
             Add Transaction
           </h3>
 
@@ -258,7 +258,7 @@ const TransactionsPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Date
               </label>
               <input
@@ -266,7 +266,7 @@ const TransactionsPage = () => {
                 name="date"
                 value={form.date}
                 onChange={handleChange}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-slate-900 dark:text-slate-200"
                 required
               />
             </div>
@@ -280,20 +280,20 @@ const TransactionsPage = () => {
               >
                 {importing ? "Importing..." : "Import to Transactions"}
               </button>
-              <span className="text-[11px] text-slate-500">Imports up to 200 rows from the uploaded statement.</span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">Imports up to 200 rows from the uploaded statement.</span>
             </div>
           )}
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                   Type
                 </label>
                 <select
                   name="type"
                   value={form.type}
                   onChange={handleChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
                 >
                   <option value="Income">Income</option>
                   <option value="Expense">Expense</option>
@@ -301,14 +301,14 @@ const TransactionsPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                   Category
                 </label>
                 <select
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
                 >
                   {categories.map((cat) => (
                     <option key={cat} value={cat}>
@@ -320,7 +320,7 @@ const TransactionsPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Amount ({appConfig.currencySymbol})
               </label>
               <input
@@ -329,13 +329,13 @@ const TransactionsPage = () => {
                 value={form.amount}
                 onChange={handleChange}
                 min="0"
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-slate-900 dark:text-slate-200"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Description (optional)
               </label>
               <input
@@ -344,7 +344,7 @@ const TransactionsPage = () => {
                 value={form.description}
                 onChange={handleChange}
                 placeholder="e.g., Zomato order, petrol, movie"
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-slate-900 dark:text-slate-200"
               />
             </div>
 
@@ -361,14 +361,14 @@ const TransactionsPage = () => {
         {/* Transactions Table */}
         <Card className="lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-slate-700">Recent Transactions</h3>
-            <p className="text-xs text-slate-500">
+            <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">Recent Transactions</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Total: <span className="font-semibold">{transactions.length}</span>
               {" "}• Page {currentPage + 1} of {pages}
             </p>
           </div>
           <div className="flex items-center gap-3 mb-4">
-            <label className="text-xs font-medium text-slate-600">Upload Statement (CSV)</label>
+            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Upload Statement (CSV)</label>
             <input
               type="file"
               accept=".csv,text/csv"
@@ -377,17 +377,17 @@ const TransactionsPage = () => {
               disabled={uploading}
             />
             {uploading && (
-              <span className="text-xs text-slate-500">Uploading...</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">Uploading...</span>
             )}
           </div>
           {/* Sort & Pagination Controls */}
           <div className="flex flex-wrap gap-3 items-center justify-between mb-3">
             <div className="flex gap-2 items-center">
-              <label className="text-xs text-slate-600">Sort by</label>
+              <label className="text-xs text-slate-600 dark:text-slate-300">Sort by</label>
               <select
                 value={sortBy}
                 onChange={(e) => { setSortBy(e.target.value); setPage(0); }}
-                className="border border-slate-300 rounded px-2 py-1 text-xs bg-white"
+                className="border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs bg-white dark:bg-slate-900 dark:text-slate-200"
               >
                 <option value="date">Date</option>
                 <option value="amount">Amount</option>
@@ -397,25 +397,25 @@ const TransactionsPage = () => {
               <select
                 value={sortDir}
                 onChange={(e) => { setSortDir(e.target.value); setPage(0); }}
-                className="border border-slate-300 rounded px-2 py-1 text-xs bg-white"
+                className="border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs bg-white dark:bg-slate-900 dark:text-slate-200"
               >
                 <option value="desc">Desc</option>
                 <option value="asc">Asc</option>
               </select>
             </div>
             <div className="flex gap-2 items-center">
-              <label className="text-xs text-slate-600">Per page</label>
+              <label className="text-xs text-slate-600 dark:text-slate-300">Per page</label>
               <select
                 value={pageSize}
                 onChange={(e) => { setPageSize(Number(e.target.value)); setPage(0); }}
-                className="border border-slate-300 rounded px-2 py-1 text-xs bg-white"
+                className="border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs bg-white dark:bg-slate-900 dark:text-slate-200"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
               </select>
               <button
                 type="button"
-                className="text-xs px-2 py-1 rounded border border-slate-300 disabled:opacity-50"
+                className="text-xs px-2 py-1 rounded border border-slate-300 dark:border-slate-700 disabled:opacity-50"
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={currentPage === 0}
               >
@@ -423,7 +423,7 @@ const TransactionsPage = () => {
               </button>
               <button
                 type="button"
-                className="text-xs px-2 py-1 rounded border border-slate-300 disabled:opacity-50"
+                className="text-xs px-2 py-1 rounded border border-slate-300 dark:border-slate-700 disabled:opacity-50"
                 onClick={() => setPage((p) => Math.min(pages - 1, p + 1))}
                 disabled={currentPage >= pages - 1}
               >
@@ -434,7 +434,7 @@ const TransactionsPage = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 text-slate-600">
+                <tr className="bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   <th className="px-3 py-2 text-left font-medium">Date</th>
                   <th className="px-3 py-2 text-left font-medium">Type</th>
                   <th className="px-3 py-2 text-left font-medium">Category</th>
@@ -446,7 +446,7 @@ const TransactionsPage = () => {
               <tbody>
                 {loading && transactions.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-3 py-6 text-center text-slate-400">
+                    <td colSpan={6} className="px-3 py-6 text-center text-slate-400 dark:text-slate-500">
                       Loading...
                     </td>
                   </tr>
@@ -454,7 +454,7 @@ const TransactionsPage = () => {
                   <tr>
                     <td
                       colSpan={6}
-                      className="px-3 py-6 text-center text-slate-400"
+                      className="px-3 py-6 text-center text-slate-400 dark:text-slate-500"
                     >
                       No transactions yet. Add your first one on the left.
                     </td>
@@ -463,28 +463,28 @@ const TransactionsPage = () => {
                   pagedTx.map((tx) => (
                     <tr
                       key={tx.id}
-                      className="border-b border-slate-100 hover:bg-slate-50"
+                      className="border-b border-slate-100 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800"
                     >
-                      <td className="px-3 py-2 text-slate-700">{tx.date}</td>
+                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{tx.date}</td>
                       <td className="px-3 py-2">
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${
                             tx.type === "Income"
-                              ? "bg-green-50 text-green-700 border border-green-100"
-                              : "bg-red-50 text-red-700 border border-red-100"
+                              ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-950 dark:text-green-300 dark:border-green-900"
+                              : "bg-red-50 text-red-700 border border-red-100 dark:bg-red-950 dark:text-red-300 dark:border-red-900"
                           }`}
                         >
                           {tx.type}
                         </span>
                       </td>
-                      <td className="px-3 py-2 text-slate-700">
+                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
                         {tx.category}
                       </td>
-                      <td className="px-3 py-2 text-right text-slate-800">
+                      <td className="px-3 py-2 text-right text-slate-800 dark:text-slate-100">
                         {appConfig.currencySymbol}
                         {tx.amount.toLocaleString("en-IN")}
                       </td>
-                      <td className="px-3 py-2 text-slate-500">
+                      <td className="px-3 py-2 text-slate-500 dark:text-slate-400">
                         {tx.description || "-"}
                       </td>
                       <td className="px-3 py-2 text-right">
@@ -507,13 +507,13 @@ const TransactionsPage = () => {
         {statementRows.length > 0 && (
           <Card className="lg:col-span-2">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium text-slate-700">Uploaded Statement Preview</h3>
-              <p className="text-xs text-slate-500">Rows: {statementRows.length}</p>
+              <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">Uploaded Statement Preview</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Rows: {statementRows.length}</p>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50 text-slate-600">
+                  <tr className="bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                     {statementHeaders.map((h, i) => (
                       <th key={i} className="px-3 py-2 text-left font-medium">{h || `col_${i}`}</th>
                     ))}
@@ -521,9 +521,9 @@ const TransactionsPage = () => {
                 </thead>
                 <tbody>
                   {statementRows.map((row, idx) => (
-                    <tr key={idx} className="border-b border-slate-100 hover:bg-slate-50">
+                    <tr key={idx} className="border-b border-slate-100 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
                       {statementHeaders.map((h, i) => (
-                        <td key={i} className="px-3 py-2 text-slate-700">{String(row[h || `col_${i}`] ?? '')}</td>
+                        <td key={i} className="px-3 py-2 text-slate-700 dark:text-slate-300">{String(row[h || `col_${i}`] ?? '')}</td>
                       ))}
                     </tr>
                   ))}

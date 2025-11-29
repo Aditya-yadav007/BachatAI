@@ -101,20 +101,20 @@ const AdminUsersPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-slate-800">
+        <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
           User Management
         </h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           View and manage registered users of the platform.
         </p>
       </div>
 
       <Card>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-slate-700">
+          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">
             All Users
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             For the project, you can explain how this will connect to backend
             APIs.
           </p>
@@ -126,7 +126,7 @@ const AdminUsersPage = () => {
             placeholder="Name"
             value={newUser.name}
             onChange={(e) => setNewUser((p) => ({ ...p, name: e.target.value }))}
-            className="border border-slate-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm dark:bg-slate-900 dark:text-slate-200"
             required
           />
           <input
@@ -134,13 +134,13 @@ const AdminUsersPage = () => {
             placeholder="Email"
             value={newUser.email}
             onChange={(e) => setNewUser((p) => ({ ...p, email: e.target.value }))}
-            className="border border-slate-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm dark:bg-slate-900 dark:text-slate-200"
             required
           />
           <select
             value={newUser.role}
             onChange={(e) => setNewUser((p) => ({ ...p, role: e.target.value }))}
-            className="border border-slate-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm dark:bg-slate-900 dark:text-slate-200"
           >
             <option value="user">user</option>
             <option value="admin">admin</option>
@@ -160,7 +160,7 @@ const AdminUsersPage = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 text-slate-600">
+              <tr className="bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                 <th className="px-3 py-2 text-left font-medium">Name</th>
                 <th className="px-3 py-2 text-left font-medium">Email</th>
                 <th className="px-3 py-2 text-left font-medium">Role</th>
@@ -173,25 +173,25 @@ const AdminUsersPage = () => {
               {(loading ? [] : users).map((user) => (
                 <tr
                   key={user.id}
-                  className="border-b border-slate-100 hover:bg-slate-50"
+                  className="border-b border-slate-100 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800"
                 >
-                  <td className="px-3 py-2 text-slate-800">{user.name}</td>
-                  <td className="px-3 py-2 text-slate-600">{user.email}</td>
-                  <td className="px-3 py-2 text-slate-600 capitalize">
+                  <td className="px-3 py-2 text-slate-800 dark:text-slate-100">{user.name}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{user.email}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-300 capitalize">
                     {user.role}
                   </td>
                   <td className="px-3 py-2">
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${
                         user.status === "Active"
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                          : "bg-slate-100 text-slate-600 border border-slate-200"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900"
+                          : "bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
                       }`}
                     >
                       {user.status}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-slate-500">{user.joined}</td>
+                  <td className="px-3 py-2 text-slate-500 dark:text-slate-400">{user.joined}</td>
                   <td className="px-3 py-2 text-right">
                     <button
                       className="text-xs text-brand-600 hover:underline mr-2"
@@ -212,7 +212,7 @@ const AdminUsersPage = () => {
               ))}
               {!loading && users.length === 0 && (
                 <tr>
-                  <td className="px-3 py-6 text-slate-500" colSpan={6}>
+                  <td className="px-3 py-6 text-slate-500 dark:text-slate-400" colSpan={6}>
                     No users found.
                   </td>
                 </tr>
