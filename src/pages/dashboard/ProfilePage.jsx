@@ -13,6 +13,9 @@ const ProfilePage = () => {
     phone: "+91 98765 43210",
     currency: "INR",
     country: "India",
+    nickName: "",
+    gender: "",
+    photoUrl: "",
   });
 
   const [preferences, setPreferences] = useState({
@@ -68,12 +71,15 @@ const ProfilePage = () => {
     }
   }, []);
 
-  // Apply dark mode to document root whenever preference changes
+  // Sync local toggle state with global theme (Topbar uses localStorage 'theme')
   useEffect(() => {
-    const root = document.documentElement;
-    if (preferences.darkMode) root.classList.add("dark");
-    else root.classList.remove("dark");
-  }, [preferences.darkMode]);
+    try {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark" || theme === "light") {
+        setPreferences((prev) => ({ ...prev, darkMode: theme === "dark" }));
+      }
+    } catch {}
+  }, []);
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -82,6 +88,15 @@ const ProfilePage = () => {
 
   const handlePreferenceToggle = (name) => {
     setPreferences((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const [imagePreview, setImagePreview] = useState("");
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setImagePreview(url);
+    setProfile((p) => ({ ...p, photoUrl: url }));
   };
 
   const handleSaveProfile = (e) => {
@@ -108,6 +123,17 @@ const ProfilePage = () => {
         budgetAlerts: preferences.budgetAlerts,
       }).catch(() => {});
     }
+    // Update global theme source so Topbar and the app stay in sync
+    try {
+      const root = document.documentElement;
+      if (preferences.darkMode) {
+        root.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        root.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+    } catch {}
     try {
       localStorage.setItem("preferences", JSON.stringify(preferences));
     } catch {}
@@ -127,8 +153,8 @@ const ProfilePage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-semibold text-slate-800">Profile</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">Profile</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Manage your account details, preferences and security for{" "}
           {appConfig.appName}.
         </p>
@@ -137,91 +163,131 @@ const ProfilePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile info */}
         <Card className="lg:col-span-2">
-          <h3 className="text-sm font-medium text-slate-700 mb-4">
-            Account Details
-          </h3>
+          <div className="rounded-lg overflow-hidden mb-4">
+            <div className="h-16 w-full bg-gradient-to-r from-blue-200 via-indigo-200 to-amber-200 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800" />
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+                  { (imagePreview || profile.photoUrl) ? (
+                    <img src={imagePreview || profile.photoUrl} alt="avatar" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs">IMG</div>
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{profile.name || "Your Name"}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{profile.email || "you@example.com"}</p>
+                </div>
+              </div>
+              <button type="button" className="px-3 py-1.5 text-xs font-medium rounded-md bg-brand-500 text-white hover:bg-brand-600">Edit</button>
+            </div>
+          </div>
 
           <form onSubmit={handleSaveProfile} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Full Name
-                </label>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Full Name</label>
                 <input
                   type="text"
                   name="name"
                   value={profile.name}
                   onChange={handleProfileChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-slate-900 dark:text-slate-200"
                 />
               </div>
-
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Email (login)
-                </label>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Nick Name</label>
+                <input
+                  type="text"
+                  name="nickName"
+                  value={profile.nickName}
+                  onChange={handleProfileChange}
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-slate-900 dark:text-slate-200"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Email</label>
                 <input
                   type="email"
                   name="email"
                   value={profile.email}
                   onChange={handleProfileChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-slate-50 cursor-not-allowed"
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800/60 cursor-not-allowed dark:text-slate-400"
                   disabled
                 />
-                <p className="mt-1 text-[11px] text-slate-500">
-                  Email is used as your login ID. To change it, contact support
-                  (for project, just mention this in documentation).
-                </p>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Phone (optional)
-                </label>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Phone Number</label>
                 <input
                   type="tel"
                   name="phone"
                   value={profile.phone}
                   onChange={handleProfileChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Country
-                </label>
-                <input
-                  type="text"
-                  name="country"
-                  value={profile.country}
-                  onChange={handleProfileChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-slate-900 dark:text-slate-200"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Preferred Currency
-                </label>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Gender</label>
+                <select
+                  name="gender"
+                  value={profile.gender}
+                  onChange={handleProfileChange}
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
+                >
+                  <option value="">Select</option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="other">Other</option>
+                  <option value="prefer_not_say">Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Country</label>
+                <select
+                  name="country"
+                  value={profile.country}
+                  onChange={handleProfileChange}
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
+                >
+                  <option value="India">India</option>
+                  <option value="United States">United States</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Profile Image</label>
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+                    { (imagePreview || profile.photoUrl) ? (
+                      <img src={imagePreview || profile.photoUrl} alt="preview" className="h-full w-full object-cover" />
+                    ) : null }
+                  </div>
+                  <input type="file" accept="image/*" onChange={handleImageChange} className="text-xs" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Preferred Currency</label>
                 <select
                   name="currency"
                   value={profile.currency}
                   onChange={handleProfileChange}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
                 >
                   <option value="INR">INR (₹)</option>
                   <option value="USD">USD ($)</option>
                   <option value="EUR">EUR (€)</option>
                 </select>
-                <p className="mt-1 text-[11px] text-slate-500">
-                  In future, this can control how amounts are displayed across
-                  the app.
-                </p>
               </div>
             </div>
 
@@ -237,47 +303,8 @@ const ProfilePage = () => {
           </form>
         </Card>
 
-        {/* Preferences / security */}
+        {/* Security */}
         <div className="space-y-4">
-          <Card>
-            <h3 className="text-sm font-medium text-slate-700 mb-3">
-              Preferences
-            </h3>
-
-            <form onSubmit={handleSavePreferences} className="space-y-3">
-              <ToggleRow
-                label="Enable dark mode (UI preference)"
-                description="For now this is only stored locally. In a full version, this would sync with your account."
-                checked={preferences.darkMode}
-                onChange={() => handlePreferenceToggle("darkMode")}
-              />
-
-              <ToggleRow
-                label="Email monthly reports"
-                description="Receive a summary of your income, expenses and savings every month."
-                checked={preferences.monthlyReportEmail}
-                onChange={() => handlePreferenceToggle("monthlyReportEmail")}
-              />
-
-              <ToggleRow
-                label="Budget alerts"
-                description="Get notifications when your spending crosses a defined budget limit."
-                checked={preferences.budgetAlerts}
-                onChange={() => handlePreferenceToggle("budgetAlerts")}
-              />
-
-              <div className="pt-2 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isSavingPrefs}
-                  className="px-4 py-2 text-sm font-medium rounded-lg bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
-                >
-                  {isSavingPrefs ? "Saving..." : "Save Preferences"}
-                </button>
-              </div>
-            </form>
-          </Card>
-
           <Card>
             <h3 className="text-sm font-medium text-slate-700 mb-2">
               Security

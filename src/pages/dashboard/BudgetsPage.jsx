@@ -53,8 +53,8 @@ const BudgetsPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-semibold text-slate-800">Budgets</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">Budgets</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Plan your monthly spending and keep track of category-wise limits.
         </p>
       </div>
@@ -62,27 +62,27 @@ const BudgetsPage = () => {
       {/* Summary cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
-          <p className="text-xs uppercase tracking-wide text-slate-500">
+          <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
             Monthly Budget
           </p>
-          <p className="mt-2 text-2xl font-semibold text-slate-800">
+          <p className="mt-2 text-2xl font-semibold text-slate-800 dark:text-slate-100">
             {appConfig.currencySymbol}
             {monthBudget.toLocaleString("en-IN")}
           </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Total amount you plan to spend this month.
           </p>
         </Card>
 
         <Card>
-          <p className="text-xs uppercase tracking-wide text-slate-500">
+          <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
             Spent So Far
           </p>
-          <p className="mt-2 text-2xl font-semibold text-slate-800">
+          <p className="mt-2 text-2xl font-semibold text-slate-800 dark:text-slate-100">
             {appConfig.currencySymbol}
             {totalSpent.toLocaleString("en-IN")}
           </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Based on current category-wise spending.
           </p>
         </Card>
@@ -99,7 +99,7 @@ const BudgetsPage = () => {
             {appConfig.currencySymbol}
             {remaining.toLocaleString("en-IN")}
           </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {remaining >= 0
               ? "You are within your planned budget."
               : "You have exceeded your monthly budget."}
@@ -111,13 +111,13 @@ const BudgetsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Budget settings */}
         <Card className="lg:col-span-1">
-          <h3 className="text-sm font-medium text-slate-700 mb-4">
+          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-4">
             Set Monthly Budget
           </h3>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Total monthly budget ({appConfig.currencySymbol})
               </label>
               <input
@@ -125,12 +125,12 @@ const BudgetsPage = () => {
                 min="0"
                 value={monthBudget}
                 onChange={handleMonthBudgetChange}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
               />
             </div>
 
-            <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-600 space-y-1">
-              <p className="font-medium text-slate-700">
+            <div className="rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-xs text-slate-600 dark:text-slate-300 space-y-1">
+              <p className="font-medium text-slate-700 dark:text-slate-200">
                 Tip from Bachat AI 🤖
               </p>
               <p>
@@ -140,7 +140,7 @@ const BudgetsPage = () => {
               </p>
               <p className="mt-1">
                 Current total of category limits:{" "}
-                <span className="font-semibold">
+                <span className="font-semibold text-slate-700 dark:text-slate-200">
                   {appConfig.currencySymbol}
                   {totalCategoryLimit.toLocaleString("en-IN")}
                 </span>
@@ -151,11 +151,11 @@ const BudgetsPage = () => {
 
         {/* Category budgets */}
         <Card className="lg:col-span-2">
-          <h3 className="text-sm font-medium text-slate-700 mb-4">
+          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-4">
             Category-wise Budgets
           </h3>
           {loading ? (
-            <div className="text-sm text-slate-500">Loading...</div>
+            <div className="text-sm text-slate-500 dark:text-slate-400">Loading...</div>
           ) : (
           <div className="space-y-3 max-h-[430px] overflow-y-auto pr-2">
             {categories.map((cat, index) => {
@@ -167,21 +167,21 @@ const BudgetsPage = () => {
               return (
                 <div
                   key={cat.name}
-                  className="border border-slate-100 rounded-lg p-3 bg-slate-50"
+                  className="border border-slate-100 dark:border-slate-800 rounded-lg p-3 bg-slate-50 dark:bg-slate-900"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <p className="text-sm font-semibold text-slate-800">
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                         {cat.name}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         Spent:{" "}
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-slate-700 dark:text-slate-200">
                           {appConfig.currencySymbol}
                           {cat.spent.toLocaleString("en-IN")}
                         </span>{" "}
                         / Limit:{" "}
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-slate-700 dark:text-slate-200">
                           {appConfig.currencySymbol}
                           {cat.limit.toLocaleString("en-IN")}
                         </span>
@@ -189,7 +189,7 @@ const BudgetsPage = () => {
                     </div>
 
                     <div className="w-32">
-                      <label className="block text-[10px] font-medium text-slate-500 mb-1">
+                      <label className="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Limit ({appConfig.currencySymbol})
                       </label>
                       <input
@@ -199,14 +199,14 @@ const BudgetsPage = () => {
                         onChange={(e) =>
                           handleCategoryLimitChange(index, e.target.value)
                         }
-                        className="w-full border border-slate-300 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white"
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white dark:bg-slate-900 dark:text-slate-200"
                       />
                     </div>
                   </div>
 
                   {/* Progress bar */}
                   <div className="mt-2">
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 mb-1">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mb-1">
                       <span>Usage</span>
                       <span
                         className={
@@ -220,7 +220,7 @@ const BudgetsPage = () => {
                           : "No limit set"}
                       </span>
                     </div>
-                    <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
                           isOver ? "bg-red-500" : "bg-brand-500"

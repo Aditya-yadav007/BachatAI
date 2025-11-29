@@ -24,10 +24,10 @@ const OverviewPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-semibold text-slate-800">
+        <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
           {textContent.pages.dashboard.title}
         </h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           {textContent.pages.dashboard.subtitle}
         </p>
       </div>
@@ -46,7 +46,7 @@ const OverviewPage = () => {
       {/* Charts & insights */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
-          <h3 className="text-sm font-medium text-slate-700 mb-3">
+          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">
             {textContent.sections.spendingByCategoryTitle}
           </h3>
           <div className="h-64">
@@ -71,10 +71,10 @@ const OverviewPage = () => {
         </Card>
 
         <Card>
-          <h3 className="text-sm font-medium text-slate-700 mb-3">
+          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">
             {textContent.sections.upcomingAlertsTitle}
           </h3>
-          <ul className="text-sm space-y-2 text-slate-600">
+          <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-300">
             <li>• You are close to your Food budget limit.</li>
             <li>• Try to reduce Shopping by 10% to increase savings.</li>
             <li>• Consider starting a SIP with ₹2000/month.</li>
