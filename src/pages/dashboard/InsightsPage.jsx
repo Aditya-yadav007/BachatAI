@@ -11,11 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  getInsightsSummary,
-  getMonthlyTrend,
-  getRecommendations,
-} from "../../api/insightsApi";
+import { getTransactions } from "../../api/transactionsApi";
 
 const InsightsPage = () => {
   const [summary, setSummary] = useState(null);
@@ -29,12 +25,85 @@ const InsightsPage = () => {
 
   const loadInsights = async () => {
     setLoading(true);
-    const s = await getInsightsSummary();
-    const t = await getMonthlyTrend();
-    const r = await getRecommendations();
+    let tx = [];
+    try {
+      tx = await getTransactions();
+    } catch (e) {
+      tx = [];
+    }
+
+    const parseDate = (d) => {
+      if (!d) return null;
+      // Expecting YYYY-MM-DD; fallback to Date parsing
+      const dt = typeof d === "string" ? new Date(d) : d;
+      return isNaN(dt?.getTime?.()) ? null : dt;
+    };
+
+    const fmtMonthKey = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}`;
+    const monthLabel = (dt) => dt.toLocaleString("en-US", { month: "short" }) + " " + dt.getFullYear();
+
+    const now = new Date();
+    const curKey = fmtMonthKey(now);
+
+    // Aggregate by month
+    const monthly = new Map();
+    for (const t of tx) {
+      const dt = parseDate(t.date);
+      if (!dt) continue;
+      const key = fmtMonthKey(dt);
+      if (!monthly.has(key)) monthly.set(key, { income: 0, expenses: 0, label: monthLabel(dt) });
+      const bucket = monthly.get(key);
+      const amt = Number(t.amount) || 0;
+      const isIncome = String(t.type).toLowerCase() === "income";
+      if (isIncome) bucket.income += amt;
+      else bucket.expenses += amt;
+    }
+
+    // Current month figures
+    const cur = monthly.get(curKey) || { income: 0, expenses: 0 };
+
+    // Compute averages over last up to 3 complete months (excluding current)
+    const keys = Array.from(monthly.keys()).sort();
+    const pastKeys = keys.filter((k) => k < curKey);
+    const last3 = pastKeys.slice(-3);
+    let avgExp = 0;
+    let avgInc = 0;
+    if (last3.length) {
+      avgExp = last3.reduce((s, k) => s + (monthly.get(k)?.expenses || 0), 0) / last3.length;
+      avgInc = last3.reduce((s, k) => s + (monthly.get(k)?.income || 0), 0) / last3.length;
+    }
+
+    const predictedMonthEndExpense = Math.round(avgExp || cur.expenses);
+    const predictedSavings = Math.max(0, Math.round((cur.income || avgInc) - predictedMonthEndExpense));
+
+    // Simple risk profile based on savings rate
+    const sr = (cur.income || avgInc) ? predictedSavings / (cur.income || avgInc) : 0;
+    const riskProfile = sr >= 0.3 ? "Conservative" : sr >= 0.15 ? "Balanced" : "Aggressive";
+
+    const s = {
+      currentMonthIncome: Math.round(cur.income),
+      currentMonthExpenses: Math.round(cur.expenses),
+      predictedMonthEndExpense,
+      predictedSavings,
+      riskProfile,
+    };
+
+    // Build trend for last 5 months + forecast next month
+    const uniqueKeys = Array.from(new Set(keys)).sort();
+    const last5 = uniqueKeys.slice(-5).map((k) => {
+      const m = monthly.get(k);
+      return { month: m.label, income: Math.round(m.income), expenses: Math.round(m.expenses) };
+    });
+
+    const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const tArr = [
+      ...last5,
+      { month: monthLabel(next) + "*", income: Math.round(avgInc || cur.income), expenses: predictedMonthEndExpense },
+    ];
+
     setSummary(s);
-    setTrend(Array.isArray(t) ? t : []);
-    setRecs(Array.isArray(r) ? r : []);
+    setTrend(tArr);
+    setRecs([]);
     setLoading(false);
   };
 

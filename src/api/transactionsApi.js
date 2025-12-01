@@ -53,19 +53,48 @@ export const getTransactions = async () => {
       return key ? row[key] : undefined;
     };
     const date = lookup("date") || lookup("txn_date") || lookup("transaction_date") || "";
-    const type = (lookup("type") || lookup("txn_type") || "Expense").toString();
+    const explicitType = (lookup("type") || lookup("txn_type") || "").toString();
     const category = lookup("category") || "Other";
-    const amountRaw = lookup("amount") || lookup("debit") || lookup("credit");
+    const debitRaw = lookup("debit");
+    const creditRaw = lookup("credit");
+    const amountRaw = lookup("amount") || debitRaw || creditRaw;
     let amount = Number(String(amountRaw || "").replace(/[^0-9.-]/g, ""));
     if (!isFinite(amount)) amount = 0;
+    // Infer type if not provided based on presence of debit/credit columns
+    let type = explicitType;
+    if (!type) {
+      const hasDebit = debitRaw !== undefined && String(debitRaw).trim() !== "";
+      const hasCredit = creditRaw !== undefined && String(creditRaw).trim() !== "";
+      if (hasCredit && !hasDebit) type = "Income";
+      else if (hasDebit && !hasCredit) type = "Expense";
+      else type = "Expense"; // default
+    }
     const description = lookup("description") || lookup("narration") || "";
     return { id: `${chosenKey}_${idx}`, date, type, category, amount, description };
   };
 
-  const list = rows.map((r, i) => mapRowToTx(r, i));
+  const statementList = rows.map((r, i) => mapRowToTx(r, i));
+
+  // Fetch user-entered transactions and map to the same structure
+  const customSnap = await get(child(ref(rtdb), `users/${uid}/transactions`));
+  let customList = [];
+  if (customSnap.exists()) {
+    const val = customSnap.val() || {};
+    customList = Object.entries(val).map(([id, rec]) => {
+      const date = typeof rec.date === "string" ? rec.date : "";
+      const type = (rec.type || "Expense").toString();
+      const category = rec.category || "Other";
+      let amount = Number(String(rec.amount || "").replace(/[^0-9.-]/g, ""));
+      if (!isFinite(amount)) amount = 0;
+      const description = rec.description || "";
+      return { id, date, type, category, amount, description, _source: "custom" };
+    });
+  }
+
+  const combined = [...customList, ...statementList];
   const toKey = (d) => (typeof d === "string" ? d : "");
-  list.sort((a, b) => toKey(b.date).localeCompare(toKey(a.date)));
-  return list;
+  combined.sort((a, b) => toKey(b.date).localeCompare(toKey(a.date)));
+  return combined;
 };
 
 export const addTransaction = async (payload) => {

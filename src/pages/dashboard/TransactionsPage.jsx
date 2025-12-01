@@ -112,11 +112,16 @@ const TransactionsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.date || !form.amount) return;
-    const payload = { ...form, amount: Number(form.amount) };
-    const newTx = await addTransaction(payload);
-    setTransactions((prev) => [newTx, ...prev]);
-    setForm((f) => ({ ...f, date: "", amount: "", description: "" }));
-    setPage(0);
+    setLoading(true);
+    try {
+      const payload = { ...form, amount: Number(form.amount) };
+      await addTransaction(payload);
+      await loadTransactions();
+      setForm((f) => ({ ...f, date: "", amount: "", description: "" }));
+      setPage(0);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -128,8 +133,9 @@ const TransactionsPage = () => {
     if (sortBy === "amount") return Number(tx.amount || 0);
     if (sortBy === "type") return String(tx.type || "").toLowerCase();
     if (sortBy === "category") return String(tx.category || "").toLowerCase();
-    // default date
-    return String(tx.date || "");
+    // default date -> use timestamp for robust ordering
+    const t = Date.parse(String(tx.date || ""));
+    return isNaN(t) ? -Infinity : t;
   };
   const sortedTx = [...transactions].sort((a, b) => {
     const va = sortKey(a);
